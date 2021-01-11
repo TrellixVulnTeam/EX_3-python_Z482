@@ -1,6 +1,7 @@
 from src.GraphInterface import GraphInterface
 
 import math
+from Node_data import Node_data,geo_location
 class DiGraph(GraphInterface):
 
     def __init__(self,mc:int=0,num_of_edges: int=0, my_nodes: dict={}, edges_in: dict={},edges_out: dict={},edges: list=[],nodes: list=[]):
@@ -13,6 +14,7 @@ class DiGraph(GraphInterface):
         self.edges=edges
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
+        x,y,z=0,0,0
         if pos!= None:
             x,y,z=pos
             pos=geo_location(x,y,z)
@@ -93,60 +95,22 @@ class DiGraph(GraphInterface):
     def __str__(self) -> str:
         return f"Graph :|V| ={self.v_size()}, |E|={self.e_size()}"
 
+    def __repr__(self):
+        lines = 'Nodes: {'
+        for key in self.my_nodes:
+            lines += ' ' + str(key) + ' ,'
+        lines += ' }\n'
 
-class geo_location:
+        lines += 'EdgesOut: {'
+        for key, value in self.edges_out.items():
+            print('key ' + str(key))
+            print('value' + str(value))
 
-    def __init__(self, x: int = 0, y: int = 0, z : int =0):
-        self.y = y
-        self.x = x
-        self.z =z
+            lines += ' ' + str(key) + ' : '
+            for neighbour in self.edges_out[key]:
+                lines += ' ' + str(neighbour) + ' ,'
+        lines += ' } '
 
-
-class Node_data :
-    def __init__(self,key: int,tag:int=None,info:str = "white" , weight: float =math.inf,pos: geo_location = None ):
-        self.key=key
-        self.tag=tag
-        self.info=info
-        self.weight=weight
-        self.pos=pos
+        return lines
 
 
-    def get_key(self):
-        return self.key
-
-    def get_pos(self):
-        return self.pos
-
-    def get_tag(self):
-        return self.tag
-
-    def get_info(self):
-        return self.info
-
-    def get_weight(self):
-        return self.weight
-
-    def set_tag(self,tag):
-        self.tag=tag
-
-    def set_pos(self,pos):
-        self.pos=pos
-
-    def set_info(self, info):
-        self.info = info
-
-    def set_weight(self,weight):
-        self.weight=weight
-
-    def __str__(self) -> str:
-        return str(self.key)
-    # def __repr__(self):
-    #     return f"{self.key}: {self.key} |edges out| {self.graph.all_out_edges_of_node(self.graph,self.key).values()} |edges in| {self.graph.all_in_edges_of_node(self.graph,self.key).values()} "
-    #
-    def __lt__(self, other):
-        return self.weight< other.weight
-
-    def __gt__(self, other):
-        return self.weight > other.weight
-    def __cmp__(self, other):
-        return int.cmp(self.weight,other.weight)
