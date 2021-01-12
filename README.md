@@ -1,4 +1,4 @@
-# This project is a python project on graphs , the main idea of this project was to "translate" an exist project we have from java to python and comparing some graph algorithims between them and between netorkx . let's subscribe our classes and methods   
+# This project is a python project on graphs , the main idea of this project was to "translate" an exist project we have from java to python and comparing some graph algorithims between them and between networkx . let's subscribe our classes and methods   
 
 EX_3:
 # class NodeData 
