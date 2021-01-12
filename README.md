@@ -1,7 +1,7 @@
-This project is a python project on graphs , the main idea of this project was to "translate" an exist project we have from java to python and comparing some graph algorithims between them and between netorkx . let's subscribe our classes and methods   
+# This project is a python project on graphs , the main idea of this project was to "translate" an exist project we have from java to python and comparing some graph algorithims between them and between netorkx . let's subscribe our classes and methods   
 
 EX_3:
- class NodeData 
+# class NodeData 
 This class represents a node_data which is a vertex in a weighted-directed graph that contains few fields: key, info ,geo location, weight and tag. Each node can have vertices “neighbors” which means there are weighted edges(a unergative weight) that connect it to each one of these vertices . The fields of this class are:
 
 Key : Represents the key of the node.
@@ -14,7 +14,7 @@ Info (String): Represent the info (meta data) of the node- will help us with som
 
 Tag (int): A variable which can help for marking 
 
-Methods:
+# Methods:
 -get (for all the fields)
 
 -set(for all the fields)
@@ -23,7 +23,7 @@ Methods:
 
 
 
-class DiGraph :
+# class DiGraph :
 This class represents a directed, weighted graph, which is a collection of nodes/vertex, the nodes can be connected to each other, but not necessarily.each edge has source dest and weight
 
 The fields of this class are:
@@ -36,10 +36,10 @@ MC : Represents the number of operations that were made on the graph. Each updat
 Methods:
 Adding/removing a node to/from the graph, connecting between nodes (by weighted edge and by source-dest ) in the graph. Get size (num of nodes), specific node, MC, list of graph’s nodes and list of neighbors. Also, getEdge which give us information about the edge between nodes. removing a edge from the graph. The function equals chek if tow graph are equals by they struct and there information..
 
-Class Graph_Algo :
+# Class Graph_Algo :
 This class represents some algorithms on the graph that will help us to get some information. The fields of this class are: -g (graph): Represents our actual graph.
 
-Methods and algorithms:
+# Methods and algorithms:
 isConnected:
 The method will determine if the graph “is strongly connected” – a graph is connected if and only if there is a valid path from every node to each other node. The method will first check some basic cases such as empty graph, and after it will use the DfsAlgo which will retrieve the number of all the visited nodes from a given source in graph - here source will be the first node in graph node list (getting by using iterator). isConnected will return true only if there is only one component in the graph using a transpose graph and compering there components.
 
