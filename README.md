@@ -62,7 +62,7 @@ This method Plots the graph.
         If the nodes have a position, the nodes will be placed there.
         Otherwise, they will be placed in a random but elegant manner.
 
-The second part of the project:
+# The second part of the project:
 about the second part of the project which contains the comperation you can find in the wiki page
 
 
