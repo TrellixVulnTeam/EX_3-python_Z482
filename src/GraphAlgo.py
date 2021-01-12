@@ -3,12 +3,12 @@ from typing import List
 import  random
 import numpy as np
 import matplotlib.pyplot as plt
-from DiGraph import DiGraph
-from GraphInterface import GraphInterface
+from src.DiGraph import DiGraph
+from src.GraphInterface import GraphInterface
 from src.GraphAlgoInterface import GraphAlgoInterface
 import json
 from queue import PriorityQueue
-from Node_data import Node_data,geo_location
+from src.Node_data import Node_data,geo_location
 from heapq import heappush, heappop ,heapify
 
 class GraphAlgo(GraphAlgoInterface):
@@ -33,20 +33,27 @@ class GraphAlgo(GraphAlgoInterface):
 
     def load_from_json(self, file_name: str) -> bool:
         graph = DiGraph()
-        with open(file_name, "r") as f:
-            jsonfile = json.load(f)
-            edges=jsonfile["Edges"]
-            nodes = jsonfile["Nodes"]
-            for n in nodes:
-                if "pos" in n.keys():
-                    x,y,z= n["pos"].split(",")
-                    pos=(float(x),float(y),float(z))
-                    graph.add_node(node_id=n["id"],pos=pos)
-                else:
-                    graph.add_node(node_id=n["id"])
-            for e in edges:
-                graph.add_edge(id1=e["src"],id2=e["dest"],weight=e["w"])
-        self.graph=graph
+        try:
+            with open(file_name, "r") as f:
+                jsonfile = json.load(f)
+                edges = jsonfile["Edges"]
+                nodes = jsonfile["Nodes"]
+                for n in nodes:
+                    if "pos" in n.keys():
+                        x, y, z = n["pos"].split(",")
+                        pos = (float(x), float(y), float(z))
+                        graph.add_node(node_id=n["id"], pos=pos)
+                    else:
+                        graph.add_node(node_id=n["id"])
+                for e in edges:
+                    graph.add_edge(id1=e["src"], id2=e["dest"], weight=e["w"])
+            self.graph = graph
+            return True
+        except IOError as e:
+            print(e)
+            return False
+
+
 
     def shortest_path(self, id1: int, id2: int) -> (float, list):
         self.set_info()
@@ -85,25 +92,34 @@ class GraphAlgo(GraphAlgoInterface):
                     q.put(self.graph.my_nodes[nei])
 
     def connected_components(self) -> List[list]:
-        components_per_node=[]
-        for node in self.get_graph().get_all_v().keys():
-            components_per_node.append(self.connected_component(node))
-        all_components=[]
-        for component in components_per_node:
-            if component not  in all_components:
-                all_components.append(component)
+        all_components = []
+        for n in self.get_graph().get_all_v().values():
+            if n.info!="grey":
+                all_components.append(self.connected_component(n.key))
+
         return all_components
+
+
+
+
     def connected_component(self, id1: int) -> list:
         if id1 not in self.get_graph().my_nodes:
             return []
         list1=self.bfs(id1)
         list2= self.bfsReverse(id1)
-        return list(set(list1)& set(list2))
+        list3 = []
+        temp = list2
+
+        for node in list1:
+            if node in temp:
+                list3.append(node)
+                self.get_graph().my_nodes[node].info="grey"
+
+        return list3
+
 
     def bfs(self,src:int):
         self.set_info()
-        self.set_weight()
-        self.set_tag()
         myset = {src}
         q=[src]
         self.get_graph().my_nodes[src].info="black"  #the node is visisted
@@ -117,10 +133,8 @@ class GraphAlgo(GraphAlgoInterface):
 
         return myset
 
-    def bfsReverse(self,src:int):
+    def bfsReverse(self,src:int) -> set:
         self.set_info()
-        self.set_weight()
-        self.set_tag()
         myset = {src}
         q=[src]
         self.get_graph().my_nodes[src].info="black"  #the node is visisted
@@ -148,10 +162,11 @@ class GraphAlgo(GraphAlgoInterface):
                 node.weight= math.inf
 
     def plot_graph(self) -> None:
+        xmin, ymin,xmax,ymax= self.plot_limit()
         for v in self.get_graph().get_all_v().values():
             if v.pos is None:
-                x = random.uniform(0.5, self.graph.v_size())
-                y= random.uniform(0.5, self.graph.v_size())
+                x = random.uniform(xmin,xmax)
+                y= random.uniform(ymin,ymax)
                 v.pos= geo_location(x,y,0)
 
         x_pos=[]
@@ -159,36 +174,44 @@ class GraphAlgo(GraphAlgoInterface):
 
         for n in self.get_graph().get_all_v().values():
             x_pos.append(n.pos.x)
-        for n in self.get_graph().get_all_v().values():
             y_pos.append(n.pos.y)
+
+
         x_arr= np.array(x_pos)
         y_arr= np.array(y_pos)
-        d=(max(x_pos))*(max(y_pos))
-        ax = plt.axes()
+
+        fig, ax = plt.subplots()
 
         for src in self.get_graph().edges_out.keys():
             for dest in self.get_graph().edges_out[src].keys():
 
-                r = 0.0001
+
                 x1 = self.get_graph().my_nodes[src].pos.x
                 y1 = self.get_graph().my_nodes[src].pos.y
                 x2 = self.get_graph().my_nodes[dest].pos.x
                 y2 = self.get_graph().my_nodes[dest].pos.y
-                dir_x = (x1 - x2) / math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
-                dir_y = (y1 - y2) / math.sqrt((x1 - x2) ** 2 + (y1 - y2) ** 2)
-                x1 = dir_x * (-r) + x1
-                y1 = dir_y * (-r) + y1
-                x2 = dir_x * r + x2
-                y2 = dir_y * r + y2
-                ax.arrow(x1, y1, (x2 - x1), (y2 - y1) , head_width=d*0.001, head_length=d*0.01, fc='k', ec='k')
+                ax.annotate("",
+                            xy=(x2, y2), xycoords='data',
+                            xytext=(x1,y1), textcoords='data',
+                            arrowprops=dict(arrowstyle="->",
+                                            connectionstyle="arc3"),
+                            )
+        ax.plot(x_arr,y_arr,'o')
 
-
-        plt.scatter(x_arr,y_arr,s=d*10)
         plt.show()
 
+    def plot_limit(self):
 
-
-
+        x_pos=[]
+        y_pos = []
+        for node in self.get_graph().get_all_v().values():
+            if node.pos != None:
+                x_pos.append(node.pos.x)
+                y_pos.append(node.pos.y)
+        if len(x_pos) !=0:
+            return (min(x_pos),min(y_pos), max(x_pos),max(y_pos))
+        else:
+            return (0,0,self.get_graph().v_size(),self.get_graph().v_size())
 
 if __name__ == '__main__':
     g = DiGraph()  # creates an empty directed graph

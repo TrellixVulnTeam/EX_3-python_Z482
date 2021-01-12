@@ -9,12 +9,12 @@ class geo_location:
 
 
 class Node_data :
-    def __init__(self,key: int,tag:int=None,info:str = "white" , weight: float =math.inf,pos: geo_location = None ):
+    def __init__(self, key: int ):
         self.key=key
-        self.tag=tag
-        self.info=info
-        self.weight = weight
-        self.pos=pos
+        self.tag=None
+        self.info="white"
+        self.weight = math.inf
+        self.pos=None
 
 
     def get_key(self):

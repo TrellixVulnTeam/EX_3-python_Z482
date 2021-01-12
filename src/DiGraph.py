@@ -1,29 +1,32 @@
 from src.GraphInterface import GraphInterface
 
 import math
-from Node_data import Node_data,geo_location
+from src.Node_data  import Node_data,geo_location
 class DiGraph(GraphInterface):
 
-    def __init__(self,mc:int=0,num_of_edges: int=0, my_nodes: dict={}, edges_in: dict={},edges_out: dict={},edges: list=[],nodes: list=[]):
-        self.mc=mc
-        self.nodes=nodes
-        self.num_of_edges=num_of_edges
-        self.my_nodes=my_nodes
-        self.edges_in=edges_in
-        self.edges_out=edges_out
-        self.edges=edges
+    def __init__(self):
+        self.mc=0
+        self.nodes=[]
+        self.num_of_edges=0
+        self.my_nodes= {}
+        self.edges_in= {}
+        self.edges_out= {}
+        self.edges=[]
 
     def add_node(self, node_id: int, pos: tuple = None) -> bool:
-        x,y,z=0,0,0
-        if pos!= None:
+        if pos != None:
             x,y,z=pos
-            pos=geo_location(x,y,z)
-        if node_id not in self.my_nodes:
-            n=Node_data(key=node_id, pos=pos)
+            gl=geo_location(x,y,z)
+        if node_id not in self.my_nodes.keys():
+            n=Node_data(key=node_id)
             self.my_nodes[node_id]= n
             self.edges_out[node_id]={}
             self.edges_in[node_id]={}
-            self.nodes.append({"pos":""+str(x)+","+str(y)+","+str(z)+"","id":self.my_nodes[node_id].key})
+            if pos != None:
+                n.pos=gl
+                self.nodes.append({"pos":""+str(x)+","+str(y)+","+str(z)+"","id":self.my_nodes[node_id].key})
+            else:
+                self.nodes.append({"id": self.my_nodes[node_id].key})
             self.mc+=1
             return True
         else:
@@ -52,9 +55,12 @@ class DiGraph(GraphInterface):
             self.num_of_edges -= len(self.edges_in[node_id])
             del self.edges_in[node_id]
 
-            self.nodes.remove({"pos":self.my_nodes[node_id].pos,"id":self.my_nodes[node_id].key})
+            if self.my_nodes[node_id].pos is not None :
+                self.nodes.remove({"pos":""+str(self.my_nodes[node_id].pos.x)+","+str(self.my_nodes[node_id].pos.y)+","+str(self.my_nodes[node_id].pos.z)+"" ,"id":self.my_nodes[node_id].key})
+            else:
+                self.nodes.append({"id": self.my_nodes[node_id].key})
             del self.my_nodes[node_id]
-            self.mc += 1
+            self.mc+=1
 
             return True
         else:
@@ -62,7 +68,7 @@ class DiGraph(GraphInterface):
 
     def remove_edge(self, node_id1: int, node_id2: int) -> bool:
         if node_id1!=node_id2 and node_id2 in self.my_nodes and node_id1 in self.my_nodes and node_id2 in self.edges_out.get(node_id1):
-            self.mc=+1
+            self.mc+=1
             self.num_of_edges-=1
             self.edges.remove({"src": node_id1, "w": self.edges_out.get(node_id1)[node_id2], "dest": node_id2})
             del self.edges_in.get(node_id2)[node_id1]
