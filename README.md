@@ -46,7 +46,7 @@ This class represents some algorithms on the graph that will help us to get some
 load_from_json:
 The method Loads a graph from a json file.
 
-ave_to_json
+save_to_json
 The method: Saves the graph in JSON format to a file and returns True if the save was successful, False o.w.
 
 shortestPath :
