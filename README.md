@@ -50,11 +50,21 @@ save_to_json
 The method: Saves the graph in JSON format to a file and returns True if the save was successful, False o.w.
 
 shortestPath :
+The method retrieves a list of vertices which represents a path in the graph from a given source and destination, if exists. The method will first check some basic cases, such as same source and destination node, or if one of these doesn’t exists in the graph. And then using the dijakstra algorithm  will return us the shortest path cost and the nodes we passed through . about the algorithim you can find information in https://en.wikipedia.org/wiki/Dijkstra's_algorithm 
 
 
 connected_component:
+This method finds the Strongly Connected Component(SCC) that node id1 is a part of. 
+* helping functions:
+BFS , bfsReverse- both methods runs on the graph in the bfs algorithim which yo can find information in : https://en.wikipedia.org/wiki/Breadth-first_search
+bfs wiil run on the nodes that sending a arrow (all_out_edges_of_node) and the bfsReverse will run on the nodes who gets arrows ( all_in_edges_of_node).
 
+then the main function will compare between the two lists we got from the functions and will take the common nodes from the lists which will be a part of the compnonent of the node. 
 connected_components:
+This method finds all the Strongly Connected Component(SCC) in the graph using the previous method. 
+in the function we wull run through all the nodes and will ask for the connected_component of each node . then we will add it to a list and then in the list will appear al the connected_components
+
+ 
 
 
 plot_graph: 
