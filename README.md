@@ -58,8 +58,9 @@ This method finds the Strongly Connected Component(SCC) that node id1 is a part 
 * helping functions:
 BFS , bfsReverse- both methods runs on the graph in the bfs algorithim which yo can find information in : https://en.wikipedia.org/wiki/Breadth-first_search
 bfs wiil run on the nodes that sending a arrow (all_out_edges_of_node) and the bfsReverse will run on the nodes who gets arrows ( all_in_edges_of_node).
-
 then the main function will compare between the two lists we got from the functions and will take the common nodes from the lists which will be a part of the compnonent of the node. 
+
+
 connected_components:
 This method finds all the Strongly Connected Component(SCC) in the graph using the previous method. 
 in the function we wull run through all the nodes and will ask for the connected_component of each node . then we will add it to a list and then in the list will appear al the connected_components
